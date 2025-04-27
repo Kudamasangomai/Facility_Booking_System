@@ -31,7 +31,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        
+
         $this->authorize('create',User::class);
         $user = User::create($request->validated());
         return response()->json([
@@ -46,7 +46,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
- 
+
         $user= User::with('bookings')->findorFail($user->id);
         return new  UserResource($user);
     }
@@ -69,10 +69,10 @@ class UserController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
-    public function updateuserstatus($id)
+    public function updateuserstatus(User $user)
     {
 
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($user->id);
         $this->authorize('updateuserstatus', User::class);
         if ($user) {
 

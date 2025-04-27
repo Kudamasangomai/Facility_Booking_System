@@ -23,10 +23,9 @@ class SearchFacilityAvailabilityRequest extends FormRequest
     {
         return [
 
-            // 'facility_name' => 'required|string|exists:facilities,name',
             'check_in' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'check_out' => 'required|date|date_format:Y-m-d|after_or_equal:check_in',
-       
+
         ];
     }
 }

@@ -29,9 +29,9 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function isFacilityBooked(int $facilityId, string $checkIn, string $checkOut): bool
+    public static function isFacilityBooked(int $facilityId, string $checkIn, string $checkOut): bool
     {
-        return static::where('facility_id', $facilityId)
+        return self::where('facility_id', $facilityId)
             ->where(function ($query) use ($checkIn, $checkOut) {
                 $query->whereBetween('check_in', [$checkIn, $checkOut])
                     ->orWhereBetween('check_out', [$checkIn, $checkOut])
@@ -42,3 +42,5 @@ class Booking extends Model
             })->exists();
     }
 }
+
+

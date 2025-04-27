@@ -31,7 +31,6 @@ class BookingResource extends JsonResource
             ),
 
             'facility' => new FacilityResource($this->whenLoaded('facility')),
-            $this->facility,
             'check_in' => $this->check_in,
             'check_out' => $this->check_out,
             'attendents' => $this->when(

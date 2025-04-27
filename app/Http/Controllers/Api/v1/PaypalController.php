@@ -14,13 +14,13 @@ class PaypalController extends Controller
     /**
      * Disclaimer:
      * The code provided works for the intended purpose,
-     * but I am still in the process of fully understanding 
-     * its underlying mechanics and structure. I plan to 
+     * but I am still in the process of fully understanding
+     * its underlying mechanics and structure. I plan to
      * continue learning and refining my understanding as
-     * I work more with this implementation.Added few 
-     * logic based with the project so the code my look 
+     * I work more with this implementation.Added few
+     * logic based with the project so the code my look
      * confusing beacuse i feel so to but well its working lol.
-     *  
+     *
      */
 
     public function payment(Request $request, $id)
@@ -71,7 +71,7 @@ class PaypalController extends Controller
     public function cancel()
     {
         return response()->json([
-            'message' => 'Cancelled',
+            'message' => 'Transaction Cancelled',
         ], Response::HTTP_NO_CONTENT);
     }
 
@@ -94,8 +94,7 @@ class PaypalController extends Controller
             $facility = Facility::find($facilityId);
 
             // if ($facility) {
-            //     // Update the the payments table as paid
-            //     $facility->status = 'booked';
+            //    Update the the payments table as paid
             //     $facility->save();
             // }
 

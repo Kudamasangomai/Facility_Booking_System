@@ -19,46 +19,44 @@ Route::get('/test', function () {
 });
 
 // Public routes
+// Auth Routes
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('forgotpassword', [AuthController::class, 'forgotpassword'])->name('forgotpassword');
 Route::get('passwordreset/{token}', [AuthController::class, 'passwordreset'])->name('password.reset');
 Route::post('passwordstore', [AuthController::class, 'passwordstore'])->name('password.store');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
-Route::get('v1/facilities', [FacilityController::class, 'index']);
+
+// Facility Routes
+Route::apiResource('v1/facilities', FacilityController::class)->only(['index','show']);
+Route::get('v1/facilities/search', [FacilityController::class, 'searchfacilityavailability']);
 
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth.basic'], function () {
 
 
     // Facilities
-    Route::apiResource('facilities', FacilityController::class)->except('index');
+    Route::apiResource('facilities', FacilityController::class)->except(['index','show'])->middleware('isAdmin');
     Route::post('/facilities/addfacilityimage/{facility}', [FacilityController::class, 'addfacilityimage']);
-
 
     // Bookings
     Route::apiResource('bookings', BookingController::class);
-    Route::get('/bookings/search', [BookingController::class, 'searchfacilityavailability']);
 
     // Users
     Route::apiResource('users', UserController::class);
-    Route::post('/users/updateuserstatus/{id}', [UserController::class, 'updateuserstatus']);
-    
+    Route::post('/users/updateuserstatus/{user}', [UserController::class, 'updateuserstatus']);
 
-    // Paymentd
+
+    // Payments
     Route::get('paynowpayment/{id}', [PayNowController::class, 'payment'])->name('paynow.payment');
     Route::get('payment/{id}', [PaypalController::class, 'payment'])->name('paypal.payment');
     Route::get('payment/cancel',  [PaypalController::class, 'cancel'])->name('payment.cancel');
     Route::get('payment/success', [PaypalController::class, 'success'])->name('payment.success');
 });
 
-Route::get('v1/facilities', [FacilityController::class, 'index']);
-
 Route::fallback(function () {
     return response()->json(
-        [
-            'message' => 'Route Not Found. If error persists, contact the Administrator on Kudam775@gmail.com'
-        ],
+        ['message' => 'Route Not Found. If error persists, contact the Administrator on Kudam775@gmail.com'],
         Response::HTTP_NOT_FOUND
     );
 });

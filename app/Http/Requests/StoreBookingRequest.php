@@ -25,7 +25,8 @@ class StoreBookingRequest extends FormRequest
             'check_in' => 'required|after_or_equal:today',
             'check_out' => 'required|after_or_equal:check_in',
             'attendants' => 'required|numeric',
-            'purpose' => 'required|alpha'
+            'purpose' => 'required|alpha',
+            'facility_id' =>'required|exists:facilities,id'
         ];
     }
 }

@@ -10,39 +10,35 @@ use Illuminate\Http\Response;
 use App\Enum\AvailabilityStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchFacilityAvailabilityRequest;
 use App\Http\Resources\FacilityResource;
 use App\Http\Resources\FacilityCollection;
 use App\Http\Requests\StoreFacilityRequest;
 use App\Http\Requests\UpdateFacilityRequest;
+use App\Models\Booking;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 
 class FacilityController extends Controller
 {
-    /**
-     * Display a listing of the Facilities
-     * and will be viewed by guests with
-     * their availibity status and prices
-     * etc
-     */
+
+    // for Authorization a isAdmin middleware was used
+
+    // Display a listing of the Facilities
     public function index()
     {
-        // return Facility::with("images")->paginate(20);
         $facilities = Facility::with('images')->paginate(20);
         return new FacilityCollection($facilities);
     }
 
     /**
-     * Store a newly created resource in storage.
-     * only Authorized user will be able to create
-     * a facility i.e admins or any user
-     * assigned the role
+     *  Store a newly created resource in storage. only Authorized user
+     *  will be able to create a facility i.e admins or any user
      */
     public function store(StoreFacilityRequest $request)
     {
-        $this->authorize('create', Facility::class);
+
         $validated = $request->validated();
-        $validated['status'] = AvailabilityStatus::Free->value;//to be removed this column
 
         DB::beginTransaction();
         try {
@@ -51,9 +47,7 @@ class FacilityController extends Controller
 
             if ($request->hasFile('images')) {
 
-                $request->validate([
-                    'images.*'  => 'required|mimes:jpeg,png,jpg,gif|max:2048',
-                ]);
+                $request->validate([ 'images.*'  => 'required|mimes:jpeg,png,jpg,gif|max:2048' ]);
                 $images = $request->file('images');
 
                 foreach ($images as $image) {
@@ -69,15 +63,19 @@ class FacilityController extends Controller
                 }
             }
             DB::commit();
-            // if ($facility) {
+
             $facility->load('images');
+
             return response()->json([
+
                 'data' => new FacilityResource($facility),
                 'message' => 'Facility Succesfully Created',
             ], Response::HTTP_CREATED);
-            // }
+
         } catch (Exception $e) {
+
             DB::rollBack();
+
             return response()->json([
                 'message' => 'Failed to create facility. Error: ' . $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -89,7 +87,7 @@ class FacilityController extends Controller
      */
     public function show(Facility $facility)
     {
-        $facility = Facility::with('bookings', 'images')->findorFail($facility->id);
+        $facility->load('bookings', 'images');
         return new  FacilityResource($facility);
     }
 
@@ -99,9 +97,9 @@ class FacilityController extends Controller
     public function update(UpdateFacilityRequest $request, Facility $facility)
     {
 
-        $facility = Facility::findorFail($facility->id);
-        $this->authorize('update', Facility::class);
+
         $facility->update($request->validated());
+
         return response()->json([
             'data' => new FacilityResource($facility),
             'message' => 'Facility Succesfully Updated',
@@ -145,15 +143,27 @@ class FacilityController extends Controller
     {
         try {
 
-            $this->authorize('delete', $facility);
             $facility->delete();
-            return response()->json([
-                'message' => ' Facility Successfully Deleted'
-            ], Response::HTTP_NO_CONTENT);
+            return response()->noContent();
+
         } catch (\Exception $e) {
+
             return response()->json([
                 'message' => 'Facility Belongs to a Booking. Cannot Be deleted.',
             ], Response::HTTP_FORBIDDEN);
         }
+    }
+
+    /**
+     * The user will search a facility with dates they might want to book to check if the
+     * Facility is free or not.
+     */
+
+    public function searchfacilityavailability(SearchFacilityAvailabilityRequest $request)
+    {
+
+        $validated = $request->validated();
+        $checkIn = $validated['check_in'];
+        $checkOut = $validated['check_out'];
     }
 }

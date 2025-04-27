@@ -31,9 +31,9 @@ class FacilityPolicy
      */
     public function create(User $user )
     {
-        return $user->usertype === UserType::Admin->value
-        ? Response::allow()
-        : Response::denyWithStatus(HttpResponse::HTTP_UNAUTHORIZED);
+        // return $user->usertype === UserType::Admin->value
+        // ? Response::allow()
+        // : Response::denyWithStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -41,9 +41,9 @@ class FacilityPolicy
      */
     public function update(User $user)
     {
-         return $user->usertype === UserType::Admin->value
-        ? Response::allow()
-        : Response::deny('UnAuthorized Action.');
+        //  return $user->usertype === UserType::Admin->value
+        // ? Response::allow()
+        // : Response::denyWithStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -51,9 +51,9 @@ class FacilityPolicy
      */
     public function delete(User $user, Facility $facility)
     {
-        return $user->usertype === UserType::Admin->value
-        ? Response::allow()
-        : Response::denyWithStatus(HttpResponse::HTTP_UNAUTHORIZED);
+        // return $user->usertype === UserType::Admin->value
+        // ? Response::allow()
+        // : Response::denyWithStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
