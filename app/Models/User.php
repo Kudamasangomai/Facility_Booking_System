@@ -3,17 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use ApiPlatform\Metadata\ApiResource;
 use App\Enum\UserType;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+#[ApiResource]
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     const ADMIN = 'admin';
-  
+
 
     /**
      * The attributes that are mass assignable.

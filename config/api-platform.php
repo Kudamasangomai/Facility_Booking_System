@@ -29,10 +29,12 @@ return [
 
     'resources' => [
         app_path('Models'),
+
     ],
 
     'formats' => [
         'jsonld' => ['application/ld+json'],
+        'json' => ['application/json']
         // 'jsonapi' => ['application/vnd.api+json'],
         // 'csv' => ['text/csv'],
     ],
@@ -114,11 +116,11 @@ return [
         //    'name' => 'Apache 2.0',
         //    'url' => 'https://www.apache.org/licenses/LICENSE-2.0.html',
         // ],
-        // 'contact' => [
-        //    'name' => 'API Support',
+        'contact' => [
+           'name' => 'API Support',
         //    'url' => 'https://www.example.com/support',
-        //    'email' => 'support@example.com',
-        // ],
+           'email' => 'kudam774@gmail.com',
+        ],
         // 'http_auth' => [
         //    'Personal Access Token' => [
         //        'scheme' => 'bearer',
